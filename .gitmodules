@@ -1,0 +1,3 @@
+[submodule "lib/IRremoteESP8266"]
+	path = lib/IRremoteESP8266
+	url = https://github.com/markszabo/IRremoteESP8266
