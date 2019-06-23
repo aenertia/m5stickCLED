@@ -9,9 +9,10 @@ A fork of the execelent WLED project for the M5StickC - the M5StickC makes an ex
 - Some Changes to the Neopixelbus driver to better handle the ESP32
 - Uses the M5StickC arduino library for Power control
 - Able to use the IMU on the M5StickC (basic input/reactive support)
+- Working Grove I2c with Wire1 I2c used by onboard peripherals (PMU/IMU/RTC)
 
 ### Known issues
-- I2C / Wire / Grove init seems to result in bootloop
+- ~~i2C / Wire / Grove init seems to result in bootloop~~
 - Gyro Support/Feedback incomplete
 - Better ifdef for m5stick and generalized display framework
 - Implement button 2 function hooks
