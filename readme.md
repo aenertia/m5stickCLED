@@ -18,6 +18,7 @@ A fork of the execelent WLED project for the M5StickC - the M5StickC makes an ex
 - Implement button 2 function hooks
 - Have not investigated using the I2S bus for the MEMS Mics (possible audio reactive Strip)
 - Implement the Multi-strip support that others have added to WLED 
+- Weird screen fliker/need to fillrect to clear text - probably due to task delay and janky st7735s implementation in M5Display.cpp
 
 ![Working Shot](https://raw.githubusercontent.com/aenertia/m5stickCLED/master/working.jpg)
 
