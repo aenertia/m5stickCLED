@@ -19,6 +19,10 @@ A fork of the execelent WLED project for the M5StickC - the M5StickC makes an ex
 - Have not investigated using the I2S bus for the MEMS Mics (possible audio reactive Strip)
 - Implement the Multi-strip support that others have added to WLED 
 
+![Working Shot](https://raw.githubusercontent.com/aenertia/m5stickCLED/master/working.jpg)
+
+
+
 ### Untested
 
 ![WLED logo](https://raw.githubusercontent.com/Aircoookie/WLED/master/wled_logo.png)   
