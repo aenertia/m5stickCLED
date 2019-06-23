@@ -20,42 +20,51 @@
 // BME280<> BMESensor;                                                     // instantiate sensor
  BME280 bme280;
 // extern TwoWire i2ctwo;// use SCL2 & SDA2
-//#define SDA 33
-//#define SCL 32
+#define SDA 33
+#define SCL 32
 //
 // TwoWire i2ctwo=TwoWire(0);
-
+int periodUser = 3000;
+unsigned long time_now = 0;
 void userBeginPreConnection()
 {
    M5.begin();
    //start i2c
    //I2cTwo = TwoWire(1); // initialize using the second i2c peripheral
-   pinMode(SDA,INPUT_PULLUP);
-   pinMode(SCL,INPUT_PULLUP);
+  pinMode(SDA,INPUT_PULLUP);
+  pinMode(SCL,INPUT_PULLUP);
    // i2ctwo.begin(SDA2,SCL2,50000);
    // Wire.begin(SDA_PIN, SCL_PIN);
-   bme280.init();
   // //Start OLED
    M5.Lcd.setRotation(0);
    M5.Lcd.fillScreen(BLACK);
    M5.Lcd.setTextColor(WHITE, BLACK);
-  // //Dim Screen
-   M5.axp.ScreenBreath(8);
+
    // Init gyro
    M5.IMU.Init();
    //Setup Screen
    M5.Lcd.setCursor(0, 2);
    M5.Lcd.printf("ESP32-LED \n");
+
    //Setup i2c
   // Wire.begin(33,32);                                                      // initialize I2C that connects to sensor
   // BMESensor.begin(); // initalize bme280 sensor
-
+  // //Dim Screen
+   M5.Axp.ScreenBreath(8);
+   //M5.Axp.SetSleep();
 
 }
 
 void userBegin()
 {
+  IPAddress ipadr = WiFi.localIP();
 
+  M5.Lcd.setRotation(1);
+  M5.Lcd.setCursor(0, 0);
+  M5.Lcd.println((String)ipadr[0] + "." + (String)ipadr[1] + "." + (String)ipadr[2] + "." + (String)ipadr[3]);
+  M5.Lcd.setRotation(0);
+
+time_now = millis();
 }
 
 void userLoop()
@@ -79,16 +88,14 @@ int16_t gyroXlast = 0;
 int16_t gyroYlast = 0;
 int16_t gyroZlast = 0;
 
+ while(millis() < time_now + periodUser){
+time_now = millis();
 
-
-  IPAddress ipadr = WiFi.localIP();
-
-  M5.Lcd.setRotation(1);
-  M5.Lcd.setCursor(0, 0);
-  M5.Lcd.println((String)ipadr[0] + "." + (String)ipadr[1] + "." + (String)ipadr[2] + "." + (String)ipadr[3]);
-  M5.Lcd.setRotation(0);
+  //wakeup grove i2c bme280
+  bme280.init();
   M5.Lcd.setCursor(0, 20);
   M5.Lcd.setTextSize(1);
+
   //write gryo
     //Clear
   //M5.Lcd.fillRect(0, 30, 80, 90, BLACK);
@@ -135,24 +142,26 @@ int16_t gyroZlast = 0;
   // M5.Lcd.printf("%.2f %.2f %.2f", map((((float) gyroX) * M5.IMU.gRes),-1000,1000,0,255), map((((float) gyroY) * M5.IMU.gRes),-1000,1000,0,255),map((((float) gyroZ) * M5.IMU.gRes),-1000,1000,0,255));
   M5.Lcd.setTextSize(2);
     float pressure;
-  M5.Lcd.fillRect(0,100,80,20, BLACK);
+  M5.Lcd.fillRect(0,90,80,20, BLACK);
     //get and print temperatures
     M5.Lcd.printf("Temp: %.2f \n", bme280.getTemperature());
     // M5.Lcd.printf(bme280.getTemperature());
     // M5.Lcd.println("C");//The unit for  Celsius because original arduino don't support special symbols
-
+    M5.Lcd.println("");
   M5.Lcd.setTextSize(1);
+  M5.Lcd.fillRect(0,130,80,10, BLACK);
     //get and print atmospheric pressure data
-    M5.Lcd.printf("Pressure: %d Pa \n", bme280.getPressure());
+    M5.Lcd.printf("Pres %.3d Pa \n", bme280.getPressure());
 
     // //get and print altitude data
     // M5.Lcd.printf("Altitude: ");
     // M5.Lcd.printf(bme280.calcAltitude(pressure));
     // M5.Lcd.println("m");
+  M5.Lcd.setCursor(0, 140);
 
     //get and print humidity data
     M5.Lcd.printf("Humidity: % \n", bme280.getHumidity());
-      M5.Lcd.fillRect(0,150,60,10, BLACK);
+     M5.Lcd.fillRect(0,150,60,10, BLACK);
       M5.Lcd.fillRect(0,150,map(bme280.getHumidity(),0,100,0,80),10, BLUE);
   // M5.Lcd.setCursor(0, 10);
   // Set up what we want to send. See ir_Daikin.cpp for all the options.
@@ -200,4 +209,5 @@ int16_t gyroZlast = 0;
 // Serial.print("Altitude:    ");
 // Serial.print(BMESensor.pressureToAltitude(relativepressure));         // display altitude in m for given pressure
 // Serial.println("m");
+}
 }
