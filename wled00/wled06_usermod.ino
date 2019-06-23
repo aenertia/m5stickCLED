@@ -9,7 +9,7 @@
 //#include <M5StickC.h>
 //#include <SPI.h>
 //#include <Wire.h>
-// #include <Seeed_BME280.h>                                                       // required by BME280 library
+#include <Seeed_BME280.h>                                                       // required by BME280 library
 
 // #define ASCII_ESC 27
 //
@@ -18,15 +18,23 @@
 // char bufout[10];
 //
 // BME280<> BMESensor;                                                     // instantiate sensor
-// BME280 bme280;
+ BME280 bme280;
+// extern TwoWire i2ctwo;// use SCL2 & SDA2
+//#define SDA 33
+//#define SCL 32
+//
+// TwoWire i2ctwo=TwoWire(0);
+
 void userBeginPreConnection()
 {
    M5.begin();
    //start i2c
-   pinMode(SDA_PIN,INPUT_PULLUP);
-   pinMode(SCL_PIN,INPUT_PULLUP);
+   //I2cTwo = TwoWire(1); // initialize using the second i2c peripheral
+   pinMode(SDA,INPUT_PULLUP);
+   pinMode(SCL,INPUT_PULLUP);
+   // i2ctwo.begin(SDA2,SCL2,50000);
    // Wire.begin(SDA_PIN, SCL_PIN);
-   // bme280.init();
+   bme280.init();
   // //Start OLED
    M5.Lcd.setRotation(0);
    M5.Lcd.fillScreen(BLACK);
@@ -80,7 +88,7 @@ int16_t gyroZlast = 0;
   M5.Lcd.println((String)ipadr[0] + "." + (String)ipadr[1] + "." + (String)ipadr[2] + "." + (String)ipadr[3]);
   M5.Lcd.setRotation(0);
   M5.Lcd.setCursor(0, 20);
-
+  M5.Lcd.setTextSize(1);
   //write gryo
     //Clear
   //M5.Lcd.fillRect(0, 30, 80, 90, BLACK);
@@ -123,30 +131,29 @@ int16_t gyroZlast = 0;
   M5.Lcd.printf("\n");
   M5.Lcd.setTextColor(WHITE);
   M5.Lcd.setCursor(0, 80);
-  M5.Lcd.println("X  Y  Z");
-  M5.Lcd.printf("%.2f %.2f %.2f", map((((float) gyroX) * M5.IMU.gRes),-1000,1000,0,255), map((((float) gyroY) * M5.IMU.gRes),-1000,1000,0,255),map((((float) gyroZ) * M5.IMU.gRes),-1000,1000,0,255));
-  M5.Lcd.setCursor(0, 100);
-  //   float pressure;
-  //
-  //   //get and print temperatures
-  //   Serial.print("Temp: ");
-  //   Serial.print(bme280.getTemperature());
-  //   Serial.println("C");//The unit for  Celsius because original arduino don't support special symbols
-  //
-  //   //get and print atmospheric pressure data
-  //   Serial.print("Pressure: ");
-  //   Serial.print(pressure = bme280.getPressure());
-  //   Serial.println("Pa");
-  //
-  //   //get and print altitude data
-  //   Serial.print("Altitude: ");
-  //   Serial.print(bme280.calcAltitude(pressure));
-  //   Serial.println("m");
-  //
-  //   //get and print humidity data
-  //   Serial.print("Humidity: ");
-  //   Serial.print(bme280.getHumidity());
-  // Serial.println("%");
+  // M5.Lcd.println("X  Y  Z");
+  // M5.Lcd.printf("%.2f %.2f %.2f", map((((float) gyroX) * M5.IMU.gRes),-1000,1000,0,255), map((((float) gyroY) * M5.IMU.gRes),-1000,1000,0,255),map((((float) gyroZ) * M5.IMU.gRes),-1000,1000,0,255));
+  M5.Lcd.setTextSize(2);
+    float pressure;
+  M5.Lcd.fillRect(0,100,80,20, BLACK);
+    //get and print temperatures
+    M5.Lcd.printf("Temp: %.2f \n", bme280.getTemperature());
+    // M5.Lcd.printf(bme280.getTemperature());
+    // M5.Lcd.println("C");//The unit for  Celsius because original arduino don't support special symbols
+
+  M5.Lcd.setTextSize(1);
+    //get and print atmospheric pressure data
+    M5.Lcd.printf("Pressure: %d Pa \n", bme280.getPressure());
+
+    // //get and print altitude data
+    // M5.Lcd.printf("Altitude: ");
+    // M5.Lcd.printf(bme280.calcAltitude(pressure));
+    // M5.Lcd.println("m");
+
+    //get and print humidity data
+    M5.Lcd.printf("Humidity: % \n", bme280.getHumidity());
+      M5.Lcd.fillRect(0,150,60,10, BLACK);
+      M5.Lcd.fillRect(0,150,map(bme280.getHumidity(),0,100,0,80),10, BLUE);
   // M5.Lcd.setCursor(0, 10);
   // Set up what we want to send. See ir_Daikin.cpp for all the options.
 //   ac.on();

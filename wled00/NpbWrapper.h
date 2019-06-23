@@ -9,8 +9,6 @@
 #define IR_PIN 0  //infrared pin (-1 to disable)
 #define RLYPIN -1 //pin for relay, will be set HIGH if LEDs are on (-1 to disable). Also usable for standby leds, triggers,...
 #define AUXPIN -1 //debug auxiliary output pin (-1 to disable)
-#define SDA_PIN 32
-#define SCL_PIN 33
 #define RLYMDE 1  //mode for relay, 0: LOW if LEDs are on 1: HIGH if LEDs are on
 
 #ifdef USE_APA102
